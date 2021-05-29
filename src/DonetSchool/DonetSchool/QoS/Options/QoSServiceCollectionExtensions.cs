@@ -22,38 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var builder = new QoSOptionsBuilder();
             configure?.Invoke(builder);
-            builder.RuleResetEvent += (configs) =>
-            {
-                PollyFactory.Reset();
-            };
-            if (builder.RuleResetEvent != null)
-            {
-                QoSEvents.RuleResetEvent += builder.RuleResetEvent;
-            }
-            if (builder.OnBreakEvent != null)
-            {
-                QoSEvents.OnBreakEvent += builder.OnBreakEvent;
-            }
-            if (builder.OnResetEvent != null)
-            {
-                QoSEvents.OnResetEvent += builder.OnResetEvent;
-            }
-            if (builder.OnHalfOpen != null)
-            {
-                QoSEvents.OnHalfOpen += builder.OnHalfOpen;
-            }
-            if (builder.OnLimitProcessResult != null)
-            {
-                QoSEvents.OnLimitProcessResult += builder.OnLimitProcessResult;
-            }
-            if (builder.OnFallbackAction != null)
-            {
-                QoSEvents.OnFallbackAction += builder.OnFallbackAction;
-            }
-            if (builder.OnFallback != null)
-            {
-                QoSEvents.OnFallback += builder.OnFallback;
-            }
+            builder.InstallEvents();
 
             #endregion Events
 

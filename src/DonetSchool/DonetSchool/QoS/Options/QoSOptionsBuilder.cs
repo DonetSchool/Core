@@ -17,5 +17,7 @@ namespace DonetSchool.QoS.Options
         public FallbackActionDelegate OnFallbackAction { get; set; }
 
         public OnFallbackDelegate OnFallback { get; set; }
+
+        public PolicyBuilderDelegate FallbackBuilderConfigure { get; set; }
     }
 }

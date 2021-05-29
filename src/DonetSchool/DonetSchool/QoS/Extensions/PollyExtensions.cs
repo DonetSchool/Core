@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Polly;
+using static DonetSchool.QoS.Delegates.QoSEvents;
 
 namespace DonetSchool.QoS.Extensions
 {
@@ -20,6 +22,15 @@ namespace DonetSchool.QoS.Extensions
                 return context["Logger"] as ILogger;
             }
             return null;
+        }
+
+        public static PolicyBuilder Configure(this PolicyBuilder builder, PolicyBuilderDelegate policyBuilderDelegate)
+        {
+            if (policyBuilderDelegate != null)
+            {
+                builder = policyBuilderDelegate.Invoke(builder);
+            }
+            return builder;
         }
     }
 }

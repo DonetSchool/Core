@@ -70,6 +70,7 @@ namespace DonetSchool.QoS.Implement
                     .Or<TimeoutRejectedException>()
                     .Or<BrokenCircuitException>()
                     .Or<ThrottlException>()
+                    .Configure(QoSEvents.FallbackBuilderConfigure)
                     .FallbackAsync(fallbackAction: async (exception, context, cancellationToken) =>
                     {
                         if (QoSEvents.OnFallbackAction != null)

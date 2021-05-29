@@ -1,4 +1,6 @@
 ﻿using DonetSchool.QoS.Config;
+using DonetSchool.QoS.Implement;
+using DonetSchool.QoS.Options;
 using Polly;
 using Polly.CircuitBreaker;
 using System;
@@ -37,5 +39,53 @@ namespace DonetSchool.QoS.Delegates
         public delegate Task OnFallbackDelegate(Exception exception, Context keyValuePairs);
 
         public static OnFallbackDelegate OnFallback;
+
+        public delegate PolicyBuilder PolicyBuilderDelegate(PolicyBuilder policyBuilder);
+
+        public static PolicyBuilderDelegate FallbackBuilderConfigure;
+
+        public static void InstallEvents(this QoSOptionsBuilder builder)
+        {
+            if (builder != null)
+            {
+                builder.RuleResetEvent += (configs) =>
+                {
+                    PollyFactory.Reset();
+                };
+                if (builder.RuleResetEvent != null)
+                {
+                    QoSEvents.RuleResetEvent += builder.RuleResetEvent;
+                }
+                if (builder.OnBreakEvent != null)
+                {
+                    QoSEvents.OnBreakEvent += builder.OnBreakEvent;
+                }
+                if (builder.OnResetEvent != null)
+                {
+                    QoSEvents.OnResetEvent += builder.OnResetEvent;
+                }
+                if (builder.OnHalfOpen != null)
+                {
+                    QoSEvents.OnHalfOpen += builder.OnHalfOpen;
+                }
+                if (builder.OnLimitProcessResult != null)
+                {
+                    QoSEvents.OnLimitProcessResult += builder.OnLimitProcessResult;
+                }
+                if (builder.OnFallbackAction != null)
+                {
+                    QoSEvents.OnFallbackAction += builder.OnFallbackAction;
+                }
+                if (builder.OnFallback != null)
+                {
+                    QoSEvents.OnFallback += builder.OnFallback;
+                }
+
+                if (builder.FallbackBuilderConfigure != null)
+                {
+                    FallbackBuilderConfigure += builder.FallbackBuilderConfigure;
+                }
+            }
+        }
     }
 }
