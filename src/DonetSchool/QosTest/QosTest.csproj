@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DonetSchool.Zk\DonetSchool.Zk.csproj" />
     <ProjectReference Include="..\DonetSchool\DonetSchool.csproj" />
   </ItemGroup>
 

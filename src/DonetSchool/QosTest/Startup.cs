@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using QosTest.Controllers;
 using System;
 using System.IO;
 using System.Net;
@@ -28,21 +29,23 @@ namespace QosTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddQoS(Configuration, configure: (builder) =>
-            {
-                builder.OnLimitProcessResult += (requestIdentity, quotaConfig, isAllow, waittimeMills) =>
-                {
-                    ServiceProvider.GetRequiredService<ILogger<Startup>>().LogDebug("requestIdentity->{0},isAllow->{1},waittimeMills->{2}", requestIdentity, isAllow, waittimeMills);
-                };
-                builder.OnFallbackAction += async (exception, keyValuePairs, cancellationToken) =>
-                {
-                    var requestDelegate = keyValuePairs["RequestDelegate"] as RequestDelegate;
-                    var httpContext = keyValuePairs["HttpContext"] as HttpContext;
-                    httpContext.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
-                    await httpContext.Response.WriteAsync("Request too many");
-                };
-            });
-            services.AddControllers();
+            //services.AddQoS(Configuration, configure: (builder) =>
+            //{
+            //    builder.OnLimitProcessResult += (requestIdentity, quotaConfig, isAllow, waittimeMills) =>
+            //    {
+            //        ServiceProvider.GetRequiredService<ILogger<Startup>>().LogDebug("requestIdentity->{0},isAllow->{1},waittimeMills->{2}", requestIdentity, isAllow, waittimeMills);
+            //    };
+            //    builder.OnFallbackAction += async (exception, keyValuePairs, cancellationToken) =>
+            //    {
+            //        var requestDelegate = keyValuePairs["RequestDelegate"] as RequestDelegate;
+            //        var httpContext = keyValuePairs["HttpContext"] as HttpContext;
+            //        httpContext.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
+            //        await httpContext.Response.WriteAsync("Request too many");
+            //    };
+            //});
+            services.AddControllers()
+                ;
+            services.AddZk(Configuration).AddZkListener<TestMemoryWatch>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +56,7 @@ namespace QosTest
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseQoS();
+            //app.UseQoS();
             app.UseHttpsRedirection();
 
             app.UseRouting();
